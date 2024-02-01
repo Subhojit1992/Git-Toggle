@@ -3,6 +3,9 @@
   "version": "1.1.0",
   "description": "",
   "main": "index.js",
+  "bin": {
+    "git-toggler": "./index.js"
+  },
   "scripts": {
     "start": "node index.js"
   },
