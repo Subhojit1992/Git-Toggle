@@ -1,0 +1,18 @@
+{
+  "name": "git-toggler",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "author": "Subhojit",
+  "license": "ISC",
+  "dependencies": {
+    "chalk": "^4.1.2",
+    "inquirer": "^8.2.5",
+    "lodash": "^4.17.21",
+    "shelljs": "^0.8.5",
+    "yamljs": "^0.3.0"
+  }
+}
