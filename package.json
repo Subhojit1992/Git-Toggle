@@ -1,11 +1,11 @@
 {
   "name": "git-toggler",
-  "version": "1.2.2",
+  "version": "1.2.3",
   "description": "",
   "engines": {
-		"node": ">=16",
-		"npm": ">=8"
-	},
+    "node": ">=16",
+    "npm": ">=8"
+  },
   "main": "index.js",
   "bin": {
     "git-toggler": "./index.js"
@@ -19,19 +19,19 @@
     "url": "https://subhojit.me"
   },
   "keywords": [
-		"cli-app",
-		"git",
-		"git-config",
-		"git-user",
-		"git-global",
-		"git-user-name",
-		"git-user-email",
-		"git-configure",
-		"commit",
+    "cli-app",
+    "git",
+    "git-config",
+    "git-user",
+    "git-global",
+    "git-user-name",
+    "git-user-email",
+    "git-configure",
+    "commit",
     "git-commit",
     "git-toggle",
     "git-toggler"
-	],
+  ],
   "license": "ISC",
   "dependencies": {
     "chalk": "^4.1.2",
