@@ -33,8 +33,8 @@ Then you need to create a ```YML``` file in anywhere in your machine. For exampl
 If you add new details. Just add details like below:
 
 ```javascript
-- 
-	name: '<user.name>'
+-
+    name: '<user.name>'
     email: '<user.email>'
     label: '<label>'
 ```
@@ -60,4 +60,3 @@ npx git-toggler ./git-details.yml
 ### Outro
 
 Dive into the dynamic flow of Git toggles and the exhilarating world of development. Fashioned with love by [Subhojit](https://subhojit.me/), where each line of code is a brushstroke of passion. ❤️
-
