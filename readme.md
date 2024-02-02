@@ -3,8 +3,8 @@
 When you need to switch multiple github account you might need to configure your Git username/email like this below
 
 ```javascript
-Set your username: git config --global user.name "FIRST_NAME LAST_NAME"
-Set your email address: git config --global user.email "MY_NAME@example.com"
+git config --global user.name "FIRST_NAME LAST_NAME"
+git config --global user.email "MY_NAME@example.com"
 ```
 
 Navigating this process repeatedly throughout your workdays can be quite cumbersome.
