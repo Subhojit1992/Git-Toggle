@@ -1,40 +1,47 @@
 #!/usr/bin/env node
 const fs = require('fs');
+const os = require('os');
+const path = require('path');
 const yargs = require('yargs');
-const inquirer = require('inquirer');
-const YAML = require('yamljs');
+const chalk = require('chalk');
 const _ = require('lodash');
 
-const shell = require('./shell');
+const gitGo = require('./gitGo');
+const add = require('./askAddDetails');
 
-const argv = yargs
-  .usage('Usage: $0 <file>')
-  .demandCommand(1, 'Please provide a file path.')
-  .argv;
+// user home directory
+const userHome = os.homedir();
+// particular file name
+const fileName = 'git-details.yml';
+// file path creation
+const filePath = path.join(userHome, fileName);
 
-const askQuestion = (list) => {
-  inquirer
-    .prompt([
-      {
-        type: 'rawlist',
-        name: 'git_type',
-        message: 'What type of git you want to use?',
-        choices: _.map(list, 'label'),
-      },
-    ])
-    .then((answers) => {
-      const singleUser = _.filter(list, {label: answers.git_type});
-      shell.buildAndRunShell(singleUser);
-    });
-}
 
-const filePath = argv._[0];
+// const argv = yargs
+//   .usage('Usage: $0 <file>')
+//   .demandCommand(1, 'Please provide a file path.')
+//   .argv;
 
-fs.readFile(filePath, 'utf8', (err, data) => {
+
+
+// const filePath = argv._[0];
+
+// console.log(filePath);
+
+
+
+
+// Check if the file exists
+fs.access(filePath, fs.constants.F_OK, (err) => {
   if (err) {
-    console.error(`Error reading file: ${err.message}`);
+    console.log(chalk.yellowBright(`File ${fileName} does not exist in the user's home directory.`))
+
+    // ok then ask for adding new one
+    add.askAddDetails(filePath);
   } else {
-    askQuestion(YAML.parse(data))
+    console.log(chalk.green(`Found the file ${fileName} in the user's home directory at ${filePath}.`))
+
+    gitGo.gitToggle(filePath);
   }
 });
 
