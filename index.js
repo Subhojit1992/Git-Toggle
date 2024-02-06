@@ -8,6 +8,7 @@ const _ = require('lodash');
 
 const gitGo = require('./gitGo');
 const add = require('./askAddDetails');
+const yargsAddEditDelete = require('./globalAddEditDelete');
 
 // user home directory
 const userHome = os.homedir();
@@ -40,7 +41,7 @@ fs.access(filePath, fs.constants.F_OK, (err) => {
     add.askAddDetails(filePath);
   } else {
     console.log(chalk.green(`Found the file ${fileName} in the user's home directory at ${filePath}.`))
-
+    // yargsAddEditDelete.addEditDelete(filePath);
     gitGo.gitToggle(filePath);
   }
 });

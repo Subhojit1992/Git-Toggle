@@ -56,23 +56,28 @@ const addMoreDetails = (filePath) => {
           console.error("Error saving file:", err);
         } else {
           console.log(chalk.green(`Git details added to ${filePath} 🥳`));
-          inquirer
-            .prompt([
-              {
-                type: "confirm",
-                name: "addMoreGlobalGitDetails",
-                message: "Do you want to add more global git details?",
-                default: true,
-              },
-            ])
-            .then((answers) => {
-              if (answers.addMoreGlobalGitDetails) {
-                // Recursively call addDetails for the next iteration
-                addMoreDetails(filePath);
-              } else {
-                gitGo.gitToggle(filePath);
-              }
-            });
+
+          const options = [
+            {
+              type: "list",
+              name: "choice",
+              message: "Please select one of the following:",
+              choices: [
+                "Do you want to add more global git details?",
+                "Proceed with Git Toggler!",
+              ],
+            },
+          ];
+
+          inquirer.prompt(options).then((answers) => {
+            const selectedIndex = options[0].choices.indexOf(answers.choice);
+
+            if (selectedIndex === 0) {
+              addMoreDetails(filePath);
+            } else if (selectedIndex === 1) {
+              gitGo.gitToggle(filePath);
+            }
+          });
         }
       });
     });

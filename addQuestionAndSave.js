@@ -1,9 +1,10 @@
 const fs = require("fs");
 const YAML = require("yamljs");
 const inquirer = require("inquirer");
+const chalk = require("chalk");
+
 const addMQ = require("./addMoreQuestionAndSave");
 const gitGo = require("./gitGo");
-const chalk = require("chalk");
 
 const questions = [
   {
@@ -46,22 +47,28 @@ module.exports.addPrompt = (filePath) => {
         console.error("Error saving file:", err);
       } else {
         console.log(chalk.green(`Git details added to ${filePath} 🥳`));
-        inquirer
-          .prompt([
-            {
-              type: "confirm",
-              name: "addMoreGlobalGitDetails",
-              message: "Do you want to add more global git details?",
-              default: true,
-            },
-          ])
-          .then((answers) => {
-            if (answers.addMoreGlobalGitDetails) {
-              addMQ.addMorePrompt(filePath);
-            } else {
-              gitGo.gitToggle(filePath);
-            }
-          });
+
+        const options = [
+          {
+            type: "list",
+            name: "choice",
+            message: "Please select one of the following:",
+            choices: [
+              "Do you want to add more global git details?",
+              "Proceed with Git Toggler!",
+            ],
+          },
+        ];
+
+        inquirer.prompt(options).then((answers) => {
+          const selectedIndex = options[0].choices.indexOf(answers.choice);
+
+          if (selectedIndex === 0) {
+            addMQ.addMorePrompt(filePath);
+          } else if (selectedIndex === 1) {
+            gitGo.gitToggle(filePath);
+          }
+        });
       }
     });
   });
