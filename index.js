@@ -3,15 +3,19 @@ const fs = require("fs");
 const os = require("os");
 const path = require("path");
 const shell = require("shelljs");
-const chalk = require('chalk');
+const chalk = require("chalk");
 const _ = require("lodash");
 
-const { Command } = require('commander');
+const packageJson = require("./package.json");
+
+const { Command } = require("commander");
 const program = new Command();
 
 const gitGo = require("./gitGo");
 const add = require("./askAddDetails");
-// const yargsAddEditDelete = require("./globalAddEditDelete");
+const addMQ = require("./addMoreQuestionAndSave");
+
+// # https://github.com/Automattic/cli-table
 
 // user home directory
 const userHome = os.homedir();
@@ -29,54 +33,60 @@ const filePath = path.join(userHome, fileName);
 
 // console.log(filePath);
 
+// default git toggler
 const indexCall = () => {
   // Check if the file exists
   fs.access(filePath, fs.constants.F_OK, (err) => {
     if (err) {
       console.log(
         chalk.yellowBright(
-          `File ${fileName} does not exist in the user's home directory.`
+          `Didn't found any git configuration! 😣 But don't worry let's create! 🥳`
         )
       );
-
       // ok then ask for adding new one
       add.askAddDetails(filePath);
     } else {
-      console.log(
-        chalk.green(
-          `Found the file ${fileName} in the user's home directory at ${filePath}.`
-        )
-      );
+      console.log(chalk.green(`Found list of git configuration! 🥳`));
       gitGo.gitToggle(filePath);
     }
   });
-}
+};
 
+// add new git config
+const addNewConfig = () => {
+  // Check if the file exists
+  fs.access(filePath, fs.constants.F_OK, (err) => {
+    if (err) {
+      // ok then ask for adding new one
+      add.askAddDetails(filePath);
+    } else {
+      addMQ.addMorePrompt(filePath);
+    }
+  });
+};
 
 program
-  .name('git-toggler')
-  .description('Git Toggler Description')
-  .version('0.8.0');
+  .name(packageJson.name)
+  .description(packageJson.description)
+  .version(packageJson.version);
 
 program
-  .option('-a, --add', 'Add New')
-  .option('-e, --edit', 'Edit Item')
-  .option('-v, --view', 'View current details')
-  .option('-p, --pizza-type <type>', 'flavour of pizza')
+  .option("-a, --add", "Add New")
+  .option("-e, --edit", "Edit Item")
+  .option("-v, --view", "View current details")
+  .option("-p, --pizza-type <type>", "flavour of pizza")
   .action((str, options) => {
     if (str.add) {
-      console.log('add')
+      addNewConfig();
     } else if (str.edit) {
-      console.log('edit')
-    }else if (str.view) {
+      console.log("edit");
+    } else if (str.view) {
       console.log(chalk.green("Current git configure information"));
-      shell.exec('git config --global user.name');
-      shell.exec('git config --global user.email');
+      shell.exec("git config --global user.name");
+      shell.exec("git config --global user.email");
     } else {
-      indexCall()
+      indexCall();
     }
   });
 
 program.parse(process.argv);
-
-
