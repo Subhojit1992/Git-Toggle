@@ -2,6 +2,7 @@
 const fs = require("fs");
 const os = require("os");
 const path = require("path");
+const Table = require("cli-table3");
 const shell = require("shelljs");
 const chalk = require("chalk");
 const _ = require("lodash");
@@ -65,6 +66,28 @@ const addNewConfig = () => {
   });
 };
 
+const viewCurrent = () => {
+  // viewCurrent();
+  const table = new Table({
+    head: ["Name", "Email"],
+    colWidths: [30, 30],
+  });
+
+  // Get the git user name and email using shell.exec
+  const gitUserName = shell
+    .exec("git config --global user.name", { silent: true })
+    .stdout.trim();
+  const gitUserEmail = shell
+    .exec("git config --global user.email", { silent: true })
+    .stdout.trim();
+
+  // Add the data to the table
+  table.push([gitUserName, gitUserEmail]);
+
+  // Display the table
+  console.log(table.toString());
+};
+
 program
   .name(packageJson.name)
   .description(packageJson.description)
@@ -73,17 +96,16 @@ program
 program
   .option("-a, --add", "Add New")
   .option("-e, --edit", "Edit Item")
-  .option("-v, --view", "View current details")
+  .option("-c, --current", "View current global git config details")
   .option("-p, --pizza-type <type>", "flavour of pizza")
   .action((str, options) => {
     if (str.add) {
       addNewConfig();
     } else if (str.edit) {
       console.log("edit");
-    } else if (str.view) {
+    } else if (str.current) {
       console.log(chalk.green("Current git configure information"));
-      shell.exec("git config --global user.name");
-      shell.exec("git config --global user.email");
+      viewCurrent();
     } else {
       indexCall();
     }
