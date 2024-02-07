@@ -1,12 +1,16 @@
 const fs = require("fs");
 const inquirer = require("inquirer");
+const chalk = require("chalk");
 const YAML = require("yamljs");
 const _ = require("lodash");
 const Table = require("cli-table3");
 
 const shell = require("./shell");
+const add = require("./askAddDetails");
+const addMQ = require("./addMoreQuestionAndSave");
 
 const askQuestion = (list) => {
+  console.log(chalk.green(`Found list of git configuration! 🥳`));
   // Create a table instance
   const table = new Table({
     head: ["Label", "Name", "Email"],
@@ -47,12 +51,30 @@ const askQuestion = (list) => {
     });
 };
 
+const askAdd = (filePath) => {
+  console.log(
+    chalk.yellowBright(`Didn't found any git configuration! 😣 let's add! 🥳`)
+  );
+  fs.access(filePath, fs.constants.F_OK, (err) => {
+    if (err) {
+      // ok then ask for adding new one
+      add.askAddDetails(filePath);
+    } else {
+      addMQ.addMorePrompt(filePath);
+    }
+  });
+};
+
 module.exports.gitToggle = function (filePath) {
   fs.readFile(filePath, "utf8", (err, data) => {
     if (err) {
       console.error(`Error reading file: ${err.message}`);
     } else {
-      askQuestion(YAML.parse(data));
+      if (YAML.parse(data).length === 0) {
+        askAdd(filePath);
+      } else {
+        askQuestion(YAML.parse(data));
+      }
     }
   });
 };

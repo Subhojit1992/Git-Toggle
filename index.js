@@ -15,6 +15,7 @@ const program = new Command();
 const gitGo = require("./gitGo");
 const add = require("./askAddDetails");
 const addMQ = require("./addMoreQuestionAndSave");
+const trash = require("./deleteDetails");
 
 // # https://github.com/Automattic/cli-table
 
@@ -47,7 +48,6 @@ const indexCall = () => {
       // ok then ask for adding new one
       add.askAddDetails(filePath);
     } else {
-      console.log(chalk.green(`Found list of git configuration! 🥳`));
       gitGo.gitToggle(filePath);
     }
   });
@@ -70,7 +70,7 @@ const viewCurrent = () => {
   // viewCurrent();
   const table = new Table({
     head: ["Name", "Email"],
-    colWidths: [30, 30],
+    colWidths: [30, 40],
   });
 
   // Get the git user name and email using shell.exec
@@ -88,6 +88,7 @@ const viewCurrent = () => {
   console.log(table.toString());
 };
 
+
 program
   .name(packageJson.name)
   .description(packageJson.description)
@@ -96,6 +97,7 @@ program
 program
   .option("-a, --add", "Add New")
   .option("-e, --edit", "Edit Item")
+  .option("-d, --delete", "Delete Item")
   .option("-c, --current", "View current global git config details")
   .option("-p, --pizza-type <type>", "flavour of pizza")
   .action((str, options) => {
@@ -103,6 +105,8 @@ program
       addNewConfig();
     } else if (str.edit) {
       console.log("edit");
+    } else if (str.delete) {
+      trash.deleteConfig(filePath);
     } else if (str.current) {
       console.log(chalk.green("Current git configure information"));
       viewCurrent();
