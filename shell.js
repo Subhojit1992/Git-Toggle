@@ -13,8 +13,8 @@ module.exports.buildAndRunShell = function (user) {
     console.log(chalk.cyan((`Setting user.name - ${user[0].name}`)));
     console.log(chalk.cyan((`Setting user.email - ${user[0].email}`)));
 
-    shell.exec(`git config --global user.name ${user[0].name}`);
-    shell.exec(`git config --global user.email ${user[0].email}`);
+    shell.exec(`git config --global --replace-all user.name ${user[0].name}`);
+    shell.exec(`git config --global --replace-all user.email ${user[0].email}`);
     console.log(chalk.yellowBright("------------------------"))
     console.log(chalk.green("Hurray Done 🥳"))
 };

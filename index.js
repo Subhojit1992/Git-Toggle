@@ -16,6 +16,7 @@ const gitGo = require("./gitGo");
 const add = require("./askAddDetails");
 const addMQ = require("./addMoreQuestionAndSave");
 const trash = require("./deleteDetails");
+const editConfig = require("./editSelectedDetails");
 
 // # https://github.com/Automattic/cli-table
 
@@ -25,15 +26,6 @@ const userHome = os.homedir();
 const fileName = "git-details.yml";
 // file path creation
 const filePath = path.join(userHome, fileName);
-
-// const argv = yargs
-//   .usage('Usage: $0 <file>')
-//   .demandCommand(1, 'Please provide a file path.')
-//   .argv;
-
-// const filePath = argv._[0];
-
-// console.log(filePath);
 
 // default git toggler
 const indexCall = () => {
@@ -88,23 +80,33 @@ const viewCurrent = () => {
   console.log(table.toString());
 };
 
+const editSelectedConfig = () => {
+  fs.access(filePath, fs.constants.F_OK, (err) => {
+    if (err) {
+      // ok then ask for adding new one
+      add.askAddDetails(filePath);
+    } else {
+      editConfig.editSelectedConfig(filePath);
+    }
+  });
+  
+}
 
 program
   .name(packageJson.name)
   .description(packageJson.description)
-  .version(packageJson.version);
+  .version(packageJson.version, '-v, --version', 'output the version number')
 
 program
-  .option("-a, --add", "Add New")
-  .option("-e, --edit", "Edit Item")
-  .option("-d, --delete", "Delete Item")
-  .option("-c, --current", "View current global git config details")
-  .option("-p, --pizza-type <type>", "flavour of pizza")
+  .option("-a, --add", "add new global git user.name and user.email configuration")
+  .option("-e, --edit", "edit git user.name and user.email configuration from your git-toggler list")
+  .option("-d, --delete", "delete git user.name and user.email configuration from your git-toggler list")
+  .option("-c, --current", "view current global git user.name and user.email config details")
   .action((str, options) => {
     if (str.add) {
       addNewConfig();
     } else if (str.edit) {
-      console.log("edit");
+      editSelectedConfig()
     } else if (str.delete) {
       trash.deleteConfig(filePath);
     } else if (str.current) {
@@ -114,5 +116,12 @@ program
       indexCall();
     }
   });
+
+// program.on('--help', () => {
+//   console.log(''); // Add a new line for better readability
+//   console.log('  Example:');
+//   console.log('');
+//   console.log('    $ your-command-here --add');
+// });
 
 program.parse(process.argv);
