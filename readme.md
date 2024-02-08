@@ -11,51 +11,35 @@ Navigating this process repeatedly throughout your workdays can be quite cumbers
 
 ```git-toggler```  transforms feature toggle management by seamlessly integrating with Git and enabling effortless toggling between global configurations for your Git username and email. This tool streamlines the process, offering a centralized control mechanism for swift activation or deactivation of features. Its ability to seamlessly handle global Git configurations enhances efficiency, making it a valuable asset for developers seeking a hassle-free experience in managing feature toggles while maintaining control over their Git identity settings.
 
+<img src="media/choose.png" alt="choose">
+
+After you choose from the list ```git-toggler```. This will do below thing automatically.
+```javascript
+git config --global user.name "FIRST_NAME LAST_NAME"
+git config --global user.email "MY_NAME@example.com"
+```
+
+<img src="media/selected.png" alt="choose">
+
 ### Install
 
 ```javascript
 npm install -g git-toggler
 ```
 
-Then you need to create a ```YML``` file in anywhere in your machine. For example ```git-details.yml``` in this file. [(What is YAML?)](https://www.redhat.com/en/topics/automation/what-is-yaml)
-
-```javascript
--
-    name: 'Subhojit'
-    email: 'my-personal-email@gmail.com'
-    label: 'Home GitHub Config'
--
-    name: 'Subhojit'
-    email: 'my-office-email@myoffice.com'
-    label: 'Office GitHub Config'
-```
-
-If you add new details. Just add details like below:
-
-```javascript
--
-    name: '<user.name>'
-    email: '<user.email>'
-    label: '<label>'
-```
-
 ### Usage
 
-Using ```git-toggler``` is very simple. If you installed ```git-toggler``` globally through npm then just run below command in your terminal where your ```YML``` config added.
+Using ```git-toggler``` is very simple. You can use this by install package globally or you can use ```npx``` 
 
 ```javascript
-git-toggler ./<PATH>/git-details.yml
+git-toggler
 // OR
-git-toggler ./git-details.yml
+npx git-toggler
 ```
 
-or you don't need to install anything. ```git-toggler``` is available via ```npx``` 
+ ```git-toggler``` has lot's of useful parameter that you can find all by pass ```-h or --help``` 
 
-```javascript
-npx git-toggler ./<PATH>/git-details.yml
-// OR
-npx git-toggler ./git-details.yml
-```
+<img src="media/help.png" alt="choose">
 
 ### Outro
 

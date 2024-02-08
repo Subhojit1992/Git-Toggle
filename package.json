@@ -6,6 +6,7 @@
     "node": ">=16",
     "npm": ">=8"
   },
+  "repository": "Subhojit1992/Git-Toggle",
   "main": "index.js",
   "bin": {
     "git-toggler": "./index.js"
