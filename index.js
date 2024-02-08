@@ -1,40 +1,127 @@
 #!/usr/bin/env node
-const fs = require('fs');
-const yargs = require('yargs');
-const inquirer = require('inquirer');
-const YAML = require('yamljs');
-const _ = require('lodash');
+const fs = require("fs");
+const os = require("os");
+const path = require("path");
+const Table = require("cli-table3");
+const shell = require("shelljs");
+const chalk = require("chalk");
+const _ = require("lodash");
 
-const shell = require('./shell');
+const packageJson = require("./package.json");
 
-const argv = yargs
-  .usage('Usage: $0 <file>')
-  .demandCommand(1, 'Please provide a file path.')
-  .argv;
+const { Command } = require("commander");
+const program = new Command();
 
-const askQuestion = (list) => {
-  inquirer
-    .prompt([
-      {
-        type: 'rawlist',
-        name: 'git_type',
-        message: 'What type of git you want to use?',
-        choices: _.map(list, 'label'),
-      },
-    ])
-    .then((answers) => {
-      const singleUser = _.filter(list, {label: answers.git_type});
-      shell.buildAndRunShell(singleUser);
-    });
+const gitGo = require("./gitGo");
+const add = require("./askAddDetails");
+const addMQ = require("./addMoreQuestionAndSave");
+const trash = require("./deleteDetails");
+const editConfig = require("./editSelectedDetails");
+
+// # https://github.com/Automattic/cli-table
+
+// user home directory
+const userHome = os.homedir();
+// particular file name
+const fileName = "git-details.yml";
+// file path creation
+const filePath = path.join(userHome, fileName);
+
+// default git toggler
+const indexCall = () => {
+  // Check if the file exists
+  fs.access(filePath, fs.constants.F_OK, (err) => {
+    if (err) {
+      console.log(
+        chalk.yellowBright(
+          `Didn't found any git configuration! 😣 But don't worry let's create! 🥳`
+        )
+      );
+      // ok then ask for adding new one
+      add.askAddDetails(filePath);
+    } else {
+      gitGo.gitToggle(filePath);
+    }
+  });
+};
+
+// add new git config
+const addNewConfig = () => {
+  // Check if the file exists
+  fs.access(filePath, fs.constants.F_OK, (err) => {
+    if (err) {
+      // ok then ask for adding new one
+      add.askAddDetails(filePath);
+    } else {
+      addMQ.addMorePrompt(filePath);
+    }
+  });
+};
+
+const viewCurrent = () => {
+  // viewCurrent();
+  const table = new Table({
+    head: ["Name", "Email"],
+    colWidths: [30, 40],
+  });
+
+  // Get the git user name and email using shell.exec
+  const gitUserName = shell
+    .exec("git config --global user.name", { silent: true })
+    .stdout.trim();
+  const gitUserEmail = shell
+    .exec("git config --global user.email", { silent: true })
+    .stdout.trim();
+
+  // Add the data to the table
+  table.push([gitUserName, gitUserEmail]);
+
+  // Display the table
+  console.log(table.toString());
+};
+
+const editSelectedConfig = () => {
+  fs.access(filePath, fs.constants.F_OK, (err) => {
+    if (err) {
+      // ok then ask for adding new one
+      add.askAddDetails(filePath);
+    } else {
+      editConfig.editSelectedConfig(filePath);
+    }
+  });
+  
 }
 
-const filePath = argv._[0];
+program
+  .name(packageJson.name)
+  .description(packageJson.description)
+  .version(packageJson.version, '-v, --version', 'output the version number')
 
-fs.readFile(filePath, 'utf8', (err, data) => {
-  if (err) {
-    console.error(`Error reading file: ${err.message}`);
-  } else {
-    askQuestion(YAML.parse(data))
-  }
-});
+program
+  .option("-a, --add", "add new global git user.name and user.email configuration")
+  .option("-e, --edit", "edit git user.name and user.email configuration from your git-toggler list")
+  .option("-d, --delete", "delete git user.name and user.email configuration from your git-toggler list")
+  .option("-c, --current", "view current global git user.name and user.email config details")
+  .action((str, options) => {
+    if (str.add) {
+      addNewConfig();
+    } else if (str.edit) {
+      editSelectedConfig()
+    } else if (str.delete) {
+      trash.deleteConfig(filePath);
+    } else if (str.current) {
+      console.log(chalk.green("Current git configure information"));
+      viewCurrent();
+    } else {
+      indexCall();
+    }
+  });
 
+// program.on('--help', () => {
+//   console.log(''); // Add a new line for better readability
+//   console.log('  Example:');
+//   console.log('');
+//   console.log('    $ your-command-here --add');
+// });
+
+program.parse(process.argv);

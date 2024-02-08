@@ -1,7 +1,7 @@
 {
   "name": "git-toggler",
   "version": "1.2.3",
-  "description": "",
+  "description": "Seamlessly handle global Git configurations and enhances your work efficiency",
   "engines": {
     "node": ">=16",
     "npm": ">=8"
@@ -35,10 +35,11 @@
   "license": "ISC",
   "dependencies": {
     "chalk": "^4.1.2",
+    "cli-table3": "^0.6.3",
+    "commander": "^12.0.0",
     "inquirer": "^8.2.5",
     "lodash": "^4.17.21",
     "shelljs": "^0.8.5",
-    "yamljs": "^0.3.0",
-    "yargs": "^17.7.2"
+    "yamljs": "^0.3.0"
   }
 }
