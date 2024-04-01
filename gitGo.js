@@ -32,21 +32,23 @@ const askQuestion = (list) => {
         type: "list",
         name: "selectedOption",
         message: "Select a git configuration:",
-        choices: list.map((option) => ({
+        choices: list.map((option, i) => ({
           name: `${option.label} - [name: ${option.name} - email: ${option.email}]`,
-          value: option.email,
+          value: i,
         })),
       },
     ])
     .then((answers) => {
-      const selectedOption = list.find(
-        (option) => option.email === answers.selectedOption
-      );
+      // console.log(answers.selectedOption, list[answers.selectedOption])
+      // const selectedOption = list.find(
+      //   (option) => option.email === answers.selectedOption
+      // );
+      const  selectedOption = list[answers.selectedOption];
       console.log(
         `You selected: ${selectedOption.label} (${selectedOption.email})`
       );
 
-      const singleUser = _.filter(list, { email: selectedOption.email });
+      const singleUser = _.filter(list, { email: selectedOption.email, name: selectedOption.name });
       shell.buildAndRunShell(singleUser);
     });
 };

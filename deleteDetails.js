@@ -58,7 +58,7 @@ const askQuestion = (list, filePath) => {
         // selected data removed from array
         const filteredData = _.filter(
           list,
-          (item) => !_.isMatch(item, { email: selectedOption.email })
+          (item) => !_.isMatch(item, { email: selectedOption.email, name: selectedOption.name })
         );
 
         fs.writeFile(filePath, YAML.stringify(filteredData), (err) => {
