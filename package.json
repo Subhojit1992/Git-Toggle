@@ -1,6 +1,6 @@
 {
   "name": "git-toggler",
-  "version": "2.0.2",
+  "version": "2.0.3",
   "description": "Seamlessly handle global Git configurations and enhances your work efficiency",
   "engines": {
     "node": ">=16",
