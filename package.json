@@ -1,6 +1,6 @@
 {
   "name": "git-toggler",
-  "version": "2.0.3",
+  "version": "2.0.4",
   "description": "Seamlessly handle global Git configurations and enhances your work efficiency",
   "engines": {
     "node": ">=16",
@@ -11,6 +11,11 @@
   "bin": {
     "git-toggler": "./index.js"
   },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
+  "preferGlobal": true,
   "scripts": {
     "start": "node index.js"
   },
